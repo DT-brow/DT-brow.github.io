@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramadhan Dashboard 2024</title>
+    <!-- Link Font Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Icon Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- CSS LENGKAP --- */
+        :root {
+            --primary: #ffd700;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --glass: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .greeting {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .date-display {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        /* Countdown Section */
+        .countdown-container {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .countdown-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            border-radius: 12px;
+            min-width: 80px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .time-box span {
+            display: block;
+        }
+
+        .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Prayer Schedule Grid */
+        .prayer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .prayer-card {
+            background: var(--glass);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .prayer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .prayer-card.active {
+            border-color: var(--primary);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .prayer-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .prayer-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .prayer-time {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            margin-top: 20px;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .time-box {
+                min-width: 70px;
+                padding: 10px;
+            }
+            .number {
+                font-size: 1.5rem;
+            }
+            .header-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-card">
+            <div class="greeting" id="greeting">Assalamu'alaikum</div>
+            <div class="date-display">
+                <span id="date-masehi">Loading...</span> | 
+                <span id="date-hijri">Loading...</span>
+            </div>
+            <h1>Ramadhan 1445 H</h1>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="countdown-container">
+            <div class="countdown-title">
+                <i class="fas fa-clock"></i> Menuju Berbuka Puasa
+            </div>
+            <div class="countdown-timer">
+                <div class="time-box">
+                    <span class="number" id="hours">00</span>
+                    <span class="label">Jam</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="minutes">00</span>
+                    <span class="label">Menit</span>
+                </div>
+                <div class="time-box">
+                    <span class="number" id="seconds">00</span>
+                    <span class="label">Detik</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prayer Schedule -->
+        <div class="prayer-grid">
+            <div class="prayer-card" id="subuh">
+                <div class="prayer-icon"><i class="fas fa-moon"></i></div>
+                <div class="prayer-name">Subuh</div>
+                <div class="prayer-time">04:30</div>
+            </div>
+            <div class="prayer-card" id="dzuhur">
+                <div class="prayer-icon"><i class="fas fa-sun"></i></div>
+                <div class="prayer-name">Dzuhur</div>
+                <div class="prayer-time">12:15</div>
+            </div>
+            <div class="prayer-card" id="ashar">
+                <div class="prayer-icon"><i class="fas fa-cloud-sun"></i></div>
+                <div class="prayer-name">Ashar</div>
+                <div class="prayer-time">15:30</div>
+            </div>
+            <div class="prayer-card" id="maghrib">
+                <div class="prayer-icon"><i class="fas fa-moon"></i></div>
+                <div class="prayer-name">Maghrib</div>
+                <div class="prayer-time" id="maghrib-time">18:25</div>
+            </div>
+            <div class="prayer-card" id="isya">
+                <div class="prayer-icon"><i class="fas fa-star-and-crescent"></i></div>
+                <div class="prayer-name">Isya</div>
+                <div class="prayer-time">19:45</div>
+            </div>
+        </div>
+
+        <!-- Quote -->
+        <div class="quote-section">
+            <p>"Barang siapa yang beri makan kepada orang yang berpuasa, maka ia mendapat pahala seperti orang yang berpuasa tersebut, tanpa mengurangi pahala orang itu sedikit pun."</p>
+            <p>- HR. Tirmidzi</p>
+        </div>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT LENGKAP --- */
+
+        // 1. Konfigurasi Jadwal Sholat (Bisa Anda Ubah Sesuai Kota)
+        // Format: Jam (24 jam)
+        const jadwalSholat = {
+            subuh: "04:30",
+            dzuhur: "12:15",
+            ashar: "15:30",
+            maghrib: "18:25", // Ini juga digunakan untuk countdown
+            isya: "19:45"
+        };
+
+        // 2. Update Tanggal Masehi dan Hijriyah
+        function updateTanggal() {
+            const now = new Date();
+            
+            // Format Masehi
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date-masehi').textContent = now.toLocaleDateString('id-ID', options);
+
+            // Hitung Hijriyah (Perkiraan Sederhana)
+            // Untuk hasil akurat,最好 menggunakan library khusus
+            const hijriYear = now.getFullYear() - 579; // Perkiraan
+            const hijriMonth = now.getMonth() + 1;
+            const hijriDay = now.getDate();
+            
+            const bulanHijri = ["Muharram", "Shafar", "Rabi'ul Awal", "Rabi'ul Akhir", 
+                              "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sha'ban", 
+                              "Ramadhan", "Syawwal", "Dzulqodah", "Dzulhijjah"];
+            
+            // Perkiraan tanggal heute (bisa tidak akurat 100%)
+            // Untuk Ramadan 1445 H (2024), Maret-April
+            let hYear = 1445;
+            let hMonthName = "Ramadhan";
+            
+            if (now.getMonth() === 2 && now.getDate() >= 10) { // Maret
+                hYear = 1445; hMonthName = "Ramadhan";
+            } else if (now.getMonth() === 3) { // April
+                hYear = 1445; hMonthName = "Ramadhan";
+            } else if (now.getMonth() > 3) {
+                hYear = 1445; hMonthName = "Syawwal";
+            } else {
+                hYear = 1445; hMonthName = "Ramadhan";
+            }
+
+            document.getElementById('date-hijri').textContent = `${hijriDay} ${hMonthName} ${hYear} H`;
+        }
+
+        // 3. Countdown Timer Menuju Maghrib
+        function updateCountdown() {
+            const now = new Date();
+            
+            // Ambil jam Maghrib dari jadwal
+            const [magH, magM] = jadwalSholat.maghrib.split(':');
+            let maghribTime = new Date();
+            maghribTime.setHours(parseInt(magH), parseInt(magM), 0);
+
+            // Jika sudah lewat maghrib, hitung untuk besok
+            if (now > maghribTime) {
+                maghribTime.setDate(maghribTime.getDate() + 1);
+            }
+
+            const diff = maghribTime - now;
+
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        // 4. Deteksi Sholat Aktif (Highlight card yang sedang berlangsung)
+        function updateActivePrayer() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            // Hapus semua highlight
+            document.querySelectorAll('.prayer-card').forEach(card => card.classList.remove('active'));
+
+            // Fungsi pembantu cek waktu
+            const getMinutes = (timeStr) => {
+                const [h, m] = timeStr.split(':');
+                return parseInt(h) * 60 + parseInt(m);
+            };
+
+            // Logic menentukan waktu aktif (15 menit sebelum & setelah waktu solat)
+            if (currentMinutes >= getMinutes(jadwalSholat.subuh) - 15 && currentMinutes < getMinutes(jadwalSholat.subuh) + 15) {
+                document.getElementById('subuh').classList.add('active');
+            } else if (currentMinutes >= getMinutes(jadwalSholat.dzuhur) - 15 && currentMinutes < getMinutes(jadwalSholat.dzuhur) + 15) {
+                document.getElementById('dzuhur').classList.add('active');
+            } else if (currentMinutes >= getMinutes(jadwalSholat.ashar) - 15 && currentMinutes < getMinutes(jadwalSholat.ashar) + 15) {
+                document.getElementById('ashar').classList.add('active');
+            } else if (currentMinutes >= getMinutes(jadwalSholat.maghrib) - 15 && currentMinutes < getMinutes(jadwalSholat.maghrib) + 15) {
+                document.getElementById('maghrib').classList.add('active');
+            } else if (currentMinutes >= getMinutes(jadwalSholat.isya) - 15 && currentMinutes < getMinutes(jadwalSholat.isya) + 15) {
+                document.getElementById('isya').classList.add('active');
+            }
+        }
+
+        // 5. Update Ucapan Sesuai Waktu
+        function updateGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting = "Assalamu'alaikum";
+
+            if (hour >= 5 && hour < 12) {
+                greeting = "Selamat Pagi ☀️";
+            } else if (hour >= 12 && hour < 15) {
+                greeting = "Selamat Siang ☀️";
+            } else if (hour >= 15 && hour < 18) {
+                greeting = "Selamat Sore 🌅";
+            } else if (hour >= 18 || hour < 5) {
+                greeting = "Selamat Malam 🌙";
+            }
+
+            document.getElementById('greeting').textContent = greeting;
+        }
+
+        // Jalankan Semua Fungsi
+        updateTanggal();
+        updateGreeting();
+        setInterval(updateCountdown, 1000);
+        setInterval(updateActivePrayer, 1000);
+        
+        // Initial call agar tidak menunggu interval pertama
+        updateCountdown();
+        updateActivePrayer();
+
+    </script>
+</body>
+</html>
